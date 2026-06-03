@@ -6,7 +6,7 @@ import { Eye, Pencil, Plus, RefreshCcw, Search, Trash2 } from 'lucide-react'
 import { ModulePage } from '../components/ModulePage'
 import { configCenterApi } from '../api/configCenter'
 import { getApiMessage, isApiSuccess } from '../api/result'
-import { normalizeList, type AnyRecord } from '../api/systemAdmin'
+import { normalizeList, systemAdminApi, type AnyRecord } from '../api/systemAdmin'
 
 const statusOptions = [
   { label: '启用', value: 1 },
@@ -34,6 +34,22 @@ const normalizeStatus = (value: unknown) => {
   return 1
 }
 
+const getDeptName = (dept: AnyRecord) => dept.deptName || dept.name || dept.label || dept.title || ''
+const getDeptCode = (dept: AnyRecord) => dept.deptCode || dept.code || dept.orgCode || dept.organizationCode || ''
+
+const flattenDeptOptions = (items: AnyRecord[] = [], level = 0): Array<{ label: string; value: string | number; dept: AnyRecord }> => {
+  return items.flatMap((item) => {
+    const name = getDeptName(item)
+    const value = item.id ?? item.deptId ?? item.value ?? item.deptCode ?? name
+    const option = {
+      label: `${'　'.repeat(level)}${name || value}`,
+      value,
+      dept: item
+    }
+    return [option, ...flattenDeptOptions(item.children || item.childList || [], level + 1)]
+  })
+}
+
 export function FondsManagementPage() {
   const [queryForm] = Form.useForm()
   const [editForm] = Form.useForm()
@@ -46,6 +62,27 @@ export function FondsManagementPage() {
   const [viewOpen, setViewOpen] = useState(false)
   const [editing, setEditing] = useState<AnyRecord | null>(null)
   const [viewing, setViewing] = useState<AnyRecord | null>(null)
+  const [deptOptions, setDeptOptions] = useState<Array<{ label: string; value: string | number; dept: AnyRecord }>>([])
+
+  const resolveDepartmentValue = (record: AnyRecord) => {
+    const deptId = record.organizationId ?? record.deptId
+    if (deptId !== undefined && deptId !== null) return deptId
+    const code = record.organizationCode
+    const name = record.organizationName
+    const matched = deptOptions.find((option) => getDeptCode(option.dept) === code || getDeptName(option.dept) === name)
+    return matched?.value
+  }
+
+  const loadDepartments = async () => {
+    try {
+      const res = await systemAdminApi.dept.list({})
+      if (res?.code !== undefined && !isApiSuccess(res)) throw new Error(getApiMessage(res, '加载部门列表失败'))
+      const { list } = normalizeList(res)
+      setDeptOptions(flattenDeptOptions(list))
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : '加载部门列表失败')
+    }
+  }
 
   const fetchRows = async (page = pagination.current, pageSize = pagination.pageSize) => {
     setLoading(true)
@@ -73,26 +110,39 @@ export function FondsManagementPage() {
 
   useEffect(() => {
     fetchRows(1, pagination.pageSize)
+    loadDepartments()
   }, [])
 
   const openCreate = () => {
     setEditing(null)
     editForm.resetFields()
     editForm.setFieldsValue({ status: 1 })
+    if (!deptOptions.length) loadDepartments()
     setModalOpen(true)
   }
 
   const openEdit = async (row: AnyRecord) => {
     setEditing(row)
-    editForm.setFieldsValue({ ...row, status: normalizeStatus(row.status) })
+    editForm.setFieldsValue({ ...row, organizationId: resolveDepartmentValue(row), status: normalizeStatus(row.status) })
+    if (!deptOptions.length) loadDepartments()
     setModalOpen(true)
     try {
       const res = await configCenterApi.fonds.detail(row.id)
       if (res?.code !== undefined && !isApiSuccess(res)) throw new Error(getApiMessage(res, '获取全宗详情失败'))
-      editForm.setFieldsValue({ ...(res.data || row), status: normalizeStatus(res.data?.status ?? row.status) })
+      const detail = res.data || row
+      editForm.setFieldsValue({ ...detail, organizationId: resolveDepartmentValue(detail), status: normalizeStatus(detail.status ?? row.status) })
     } catch (error) {
       message.error(error instanceof Error ? error.message : '获取全宗详情失败')
     }
+  }
+
+  const handleDepartmentChange = (value?: string | number) => {
+    const dept = deptOptions.find((option) => option.value === value)?.dept
+    editForm.setFieldsValue({
+      organizationId: value,
+      organizationName: dept ? getDeptName(dept) : undefined,
+      organizationCode: dept ? getDeptCode(dept) : undefined
+    })
   }
 
   const openView = async (row: AnyRecord) => {
@@ -230,12 +280,18 @@ export function FondsManagementPage() {
           <Form.Item label="全宗名称" name="fondsName" rules={[{ required: true, message: '请输入全宗名称' }]}>
             <Input placeholder="请输入全宗名称" />
           </Form.Item>
-          <Form.Item label="组织机构" name="organizationName">
-            <Input placeholder="请输入组织机构" />
+          <Form.Item label="组织机构" name="organizationId">
+            <Select
+              allowClear
+              showSearch
+              options={deptOptions}
+              optionFilterProp="label"
+              placeholder="请选择部门"
+              onChange={handleDepartmentChange}
+            />
           </Form.Item>
-          <Form.Item label="组织机构代码" name="organizationCode">
-            <Input placeholder="请输入组织机构代码" />
-          </Form.Item>
+          <Form.Item hidden name="organizationName"><Input /></Form.Item>
+          <Form.Item hidden name="organizationCode"><Input /></Form.Item>
           <Form.Item label="联系人" name="contactPerson">
             <Input placeholder="请输入联系人" />
           </Form.Item>
