@@ -1,11 +1,9 @@
-﻿import axios from 'axios'
+import axios from 'axios'
 import { authStorage } from '../utils/storage'
 
-export const getBaseURL = () => {
-  if (import.meta.env.VITE_API_BASE_URL) return import.meta.env.VITE_API_BASE_URL
-  if (typeof window !== 'undefined' && window.location) return `${window.location.origin}/api`
-  return '/api'
-}
+const API_BASE_URL = 'http://8.129.36.219:8081/archives-admin'
+
+export const getBaseURL = () => import.meta.env.VITE_API_BASE_URL || API_BASE_URL
 
 const http = axios.create({
   baseURL: getBaseURL(),
@@ -67,7 +65,7 @@ http.interceptors.response.use(
       return Promise.reject(new Error('接口请求超时，请检查后端服务是否正常'))
     }
     if (!error.response) {
-      return Promise.reject(new Error('无法连接后端服务，请确认服务已启动并且代理指向正确'))
+      return Promise.reject(new Error('无法连接后端服务，请确认服务地址是否正确'))
     }
     const body = error.response.data
     const message = body?.msg || body?.message || error.message || '接口请求失败'
