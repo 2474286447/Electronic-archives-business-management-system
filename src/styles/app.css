@@ -464,6 +464,37 @@
 .notice-view { max-height: 520px; overflow: auto; color: var(--text); line-height: 1.7; }
 .error-dump { min-height: 520px; margin: 0; padding: 14px; overflow: auto; white-space: pre-wrap; word-break: break-word; background: #0f172a; color: #dbeafe; border-radius: 8px; }
 
+.config-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 16px;
+}
+
+.config-form-span {
+  grid-column: 1 / -1;
+}
+
+.category-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.category-tree-panel {
+  align-self: start;
+  min-height: 520px;
+}
+
+.category-tree-panel .ant-tree {
+  max-height: calc(100vh - 280px);
+  overflow: auto;
+  background: transparent;
+}
+
+.category-tree-panel .ant-tree-node-content-wrapper {
+  min-height: 30px;
+}
+
 .ant-table-wrapper .ant-table { color: var(--text); background: #fff !important; }
 .ant-table-wrapper .ant-table-container { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
 .ant-table-wrapper .ant-table-thead > tr > th { background: #edf4fb !important; color: var(--text-strong) !important; border-bottom: 1px solid var(--line) !important; font-weight: 800; }
@@ -491,6 +522,7 @@
   .content { height: auto; min-height: calc(100vh - var(--topbar-height)); padding: 14px; }
   .warehouse-map-large { grid-template-columns: repeat(6, minmax(34px, 1fr)); }
   .settings-grid { grid-template-columns: 1fr; }
+  .category-layout { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   .login-page { grid-template-columns: 1fr; }

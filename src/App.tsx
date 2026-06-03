@@ -9,6 +9,8 @@ import { SystemSettingsPage } from './pages/SystemSettingsPage'
 import { NoticeManagementPage } from './pages/NoticeManagementPage'
 import { LogManagementPage } from './pages/LogManagementPage'
 import { WarehouseRackPage } from './pages/WarehouseRackPage'
+import { FondsManagementPage } from './pages/FondsManagementPage'
+import { ArchiveCategoryPage } from './pages/ArchiveCategoryPage'
 import { PlaceholderPage } from './pages/PlaceholderPage'
 import { routes } from './routes'
 
@@ -18,7 +20,9 @@ const pageByPath: Record<string, ReactNode> = {
   '/system-settings': <SystemSettingsPage />,
   '/notice-management': <NoticeManagementPage />,
   '/log-management': <LogManagementPage />,
-  '/warehouse/rack': <WarehouseRackPage />
+  '/warehouse/rack': <WarehouseRackPage />,
+  '/config/fonds': <FondsManagementPage />,
+  '/config/archive-category': <ArchiveCategoryPage />
 }
 
 export default function App() {

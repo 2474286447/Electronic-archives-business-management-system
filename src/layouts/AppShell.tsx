@@ -20,7 +20,9 @@ import {
   Radio,
   Search,
   ServerCog,
+  Settings,
   Shield,
+  Tags,
   Users,
   UserRound
 } from 'lucide-react'
@@ -58,6 +60,15 @@ const navTree: NavNode[] = [
     ]
   },
   { label: '用户中心', path: '/user-center', icon: Users },
+  {
+    label: '配置中心',
+    icon: Settings,
+    defaultOpen: true,
+    children: [
+      { label: '全宗管理', path: '/config/fonds', icon: Building2 },
+      { label: '门类管理', path: '/config/archive-category', icon: Tags }
+    ]
+  },
   {
     label: '系统管理',
     icon: ServerCog,
