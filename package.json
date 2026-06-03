@@ -1,35 +1,35 @@
-﻿{
-    "name": "archive-react-jz",
-    "version": "1.0.0",
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "dev": "vite --host 0.0.0.0",
-        "build": "vite build",
-        "typecheck": "tsc -p tsconfig.json",
-        "preview": "vite preview --host 0.0.0.0"
-    },
-    "dependencies": {
-        "@vladmandic/face-api": "^1.7.13",
-        "antd": "^6.1.0",
-        "axios": "^1.13.4",
-        "html2canvas": "^1.4.1",
-        "jsencrypt": "^3.3.2",
-        "jspdf": "^4.2.1",
-        "lucide-react": "^1.17.0",
-        "react": "^19.2.7",
-        "react-dom": "^19.2.7",
-        "react-router-dom": "^7.16.0",
-        "zustand": "^5.0.9"
-    },
-    "devDependencies": {
-        "@types/react": "^19.2.7",
-        "@types/react-dom": "^19.2.3",
-        "@vitejs/plugin-react": "^4.7.0",
-        "autoprefixer": "^10.4.16",
-        "postcss": "^8.4.31",
-        "tailwindcss": "^3.3.5",
-        "typescript": "^6.0.0-dev.20260601",
-        "vite": "^4.5.0"
-    }
+{
+  "name": "archive-react-jz",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "typecheck": "tsc -p tsconfig.json",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@vladmandic/face-api": "^1.7.13",
+    "antd": "^6.1.0",
+    "axios": "^1.13.4",
+    "html2canvas": "^1.4.1",
+    "jsencrypt": "^3.3.2",
+    "jspdf": "^4.2.1",
+    "lucide-react": "^1.17.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-router-dom": "^7.16.0",
+    "zustand": "^5.0.9"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.7.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^6.0.0-dev.20260601",
+    "vite": "^4.5.0"
+  }
 }
