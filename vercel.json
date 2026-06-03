@@ -4,6 +4,10 @@
   "framework": "vite",
   "rewrites": [
     {
+      "source": "/archives-admin/:path*",
+      "destination": "http://8.129.36.219:8081/archives-admin/:path*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

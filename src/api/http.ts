@@ -1,9 +1,14 @@
 import axios from 'axios'
 import { authStorage } from '../utils/storage'
 
-const API_BASE_URL = 'http://8.129.36.219:8081/archives-admin'
+const DIRECT_API_BASE_URL = 'http://8.129.36.219:8081/archives-admin'
+const VERCEL_API_BASE_URL = '/archives-admin'
 
-export const getBaseURL = () => import.meta.env.VITE_API_BASE_URL || API_BASE_URL
+export const getBaseURL = () => {
+  if (import.meta.env.VITE_API_BASE_URL) return import.meta.env.VITE_API_BASE_URL
+  if (typeof window !== 'undefined' && window.location.protocol === 'https:') return VERCEL_API_BASE_URL
+  return DIRECT_API_BASE_URL
+}
 
 const http = axios.create({
   baseURL: getBaseURL(),
