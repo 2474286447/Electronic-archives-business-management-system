@@ -1,11 +1,12 @@
-# React history 路由部署示例：直接访问 /login、/dashboard 不会 404。
-# 将 root 修改为实际 dist 目录；/api/ 转发到后端 archives-admin。
-
+# React history 路由部署示例：
+# 1. root 指向当前 React 项目的 dist 目录
+# 2. /login、/dashboard 等前端路由通过 try_files 回落到 index.html
+# 3. 前端生产接口基址为 /archives-admin，与当前 8081 代理入口保持一致
 server {
-  listen 8082;
+  listen 8081;
   server_name localhost;
 
-  root /home/admin/app/archive-jz/dist;
+  root /home/admin/app/archive/dist;
   index index.html index.htm;
 
   location / {
@@ -16,9 +17,10 @@ server {
     try_files $uri =404;
   }
 
-  location /api/ {
-    proxy_pass http://8.129.36.219:8088/archives-admin/;
+  location /archives-admin/ {
+    proxy_pass http://8.129.36.219:9088/archives-admin/;
     proxy_http_version 1.1;
+    proxy_redirect off;
 
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;

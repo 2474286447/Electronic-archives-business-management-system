@@ -2,7 +2,7 @@ import axios from 'axios'
 import { authStorage } from '../utils/storage'
 
 const DIRECT_API_BASE_URL = 'http://8.129.36.219:8081/archives-admin'
-const SAME_ORIGIN_API_BASE_URL = '/api'
+const SAME_ORIGIN_API_BASE_URL = '/archives-admin'
 const LOGIN_PATH = '/login'
 
 export const getBaseURL = () => {

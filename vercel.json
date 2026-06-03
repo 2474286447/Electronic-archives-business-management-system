@@ -4,7 +4,7 @@
   "framework": "vite",
   "rewrites": [
     {
-      "source": "/api/:path*",
+      "source": "/archives-admin/:path*",
       "destination": "http://8.129.36.219:8081/archives-admin/:path*"
     },
     {
