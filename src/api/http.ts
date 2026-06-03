@@ -2,12 +2,19 @@ import axios from 'axios'
 import { authStorage } from '../utils/storage'
 
 const DIRECT_API_BASE_URL = 'http://8.129.36.219:8081/archives-admin'
-const VERCEL_API_BASE_URL = '/archives-admin'
+const SAME_ORIGIN_API_BASE_URL = '/api'
+const LOGIN_PATH = '/login'
 
 export const getBaseURL = () => {
   if (import.meta.env.VITE_API_BASE_URL) return import.meta.env.VITE_API_BASE_URL
-  if (typeof window !== 'undefined' && window.location.protocol === 'https:') return VERCEL_API_BASE_URL
+  if (typeof window !== 'undefined') return SAME_ORIGIN_API_BASE_URL
   return DIRECT_API_BASE_URL
+}
+
+const redirectToLogin = () => {
+  if (typeof window === 'undefined') return
+  if (window.location.pathname.includes('/login')) return
+  window.location.href = LOGIN_PATH
 }
 
 const http = axios.create({
@@ -45,9 +52,7 @@ http.interceptors.response.use(
     }
     if (body.code === 401) {
       authStorage.clearSession()
-      if (!window.location.pathname.includes('/login')) {
-        window.location.href = '/login'
-      }
+      redirectToLogin()
       return Promise.reject(new Error(body.msg || '登录已过期，请重新登录'))
     }
     if (body.code === 403) {
@@ -58,9 +63,7 @@ http.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       authStorage.clearSession()
-      if (!window.location.pathname.includes('/login')) {
-        window.location.href = '/login'
-      }
+      redirectToLogin()
       return Promise.reject(new Error('登录已过期，请重新登录'))
     }
     if (error.response?.status === 403) {
